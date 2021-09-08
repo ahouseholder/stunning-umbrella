@@ -62,17 +62,26 @@ jobs:
         with:
           ref: my_branch
       
-      - run: |
+      - name: git config
+        run: |
           git config --global user.email "you@example.com"
           git config --global user.name "Your Name"
+          
+      - name: cat files
           cat *.txt > out.txt
           rm *_.txt
           git add .
           git commit -m "replace individual files"
       
-      - run: |
-          git fetch
+      - name: squash merge 
+        run: |
+          git fetch --all
           git checkout main
           git merge --squash my_branch
           git commit -m "merge squashed my_branch"
-          git push origin main && git push -d origin my_branch && git branch -d my_branch
+          git push origin main
+          
+      - name: delete my_branch
+        run: |
+          git push -d origin my_branch
+          git branch -d my_branch
