@@ -75,4 +75,4 @@ jobs:
           git checkout main
           git merge --squash my_branch
           git commit -m "merge squashed my_branch"
-          git push && git push -d origin my_branch && git branch -d my_branch
+          git push origin main && git push -d origin my_branch && git branch -d my_branch
