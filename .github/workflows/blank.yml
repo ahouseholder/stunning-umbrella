@@ -43,6 +43,8 @@ jobs:
           echo ${{ matrix.pfx }} > ${{ matrix.pfx }}.txt
         
       - run: |
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
           git add .
           git commit -m "add ${{ matrix.pfx }}.txt"
           git pull --rebase
@@ -58,6 +60,8 @@ jobs:
           ref: my_branch
       
       - run: |
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
           cat *.txt > out.txt
           rm 0.txt 1.txt 2.txt 3.txt
           git add .
