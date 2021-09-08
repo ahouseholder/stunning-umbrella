@@ -32,7 +32,7 @@ jobs:
     
     strategy:
       matrix:
-        pfx: [ 0, 1, 2, 3]
+        pfx: [ 4, 5, 6, 7]
     
     steps:
       - uses: actions/checkout@v2
@@ -40,7 +40,7 @@ jobs:
           ref: my_branch
       
       - run: |
-          echo ${{ matrix.pfx }} > ${{ matrix.pfx }}.txt
+          echo ${{ matrix.pfx }} > ${{ matrix.pfx }}_.txt
         
       - run: |
           git config --global user.email "you@example.com"
@@ -66,7 +66,7 @@ jobs:
           git config --global user.email "you@example.com"
           git config --global user.name "Your Name"
           cat *.txt > out.txt
-          rm 0.txt 1.txt 2.txt 3.txt
+          rm *_.txt
           git add .
           git commit -m "replace individual files"
       
