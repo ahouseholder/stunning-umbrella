@@ -40,13 +40,13 @@ jobs:
           ref: my_branch
       
       - run: |
-        echo ${{ matrix.pfx }} > ${{ matrix.pfx }}.txt
+          echo ${{ matrix.pfx }} > ${{ matrix.pfx }}.txt
         
       - run: |
-        git add .
-        git commit -m "add ${{ matrix.pfx }}.txt"
-        git pull --rebase
-        git push
+          git add .
+          git commit -m "add ${{ matrix.pfx }}.txt"
+          git pull --rebase
+          git push
 
   concat_files:
     runs-on: ubuntu-latest
@@ -57,10 +57,10 @@ jobs:
         with:
           ref: my_branch
       
-      -run: |
-        cat *.txt > out.txt
-        rm 0.txt 1.txt 2.txt 3.txt
-        git add .
-        git commit -m "replace individual files"
-        git push
+      - run: |
+          cat *.txt > out.txt
+          rm 0.txt 1.txt 2.txt 3.txt
+          git add .
+          git commit -m "replace individual files"
+          git push
 
