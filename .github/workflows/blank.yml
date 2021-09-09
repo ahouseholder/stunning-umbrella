@@ -22,8 +22,8 @@ jobs:
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: |
-          git checkout -b my_branch --track origin/my_branch
-          git push
+          git checkout -b my_branch
+          git push --set-upstream origin my_branch
 
   add_files:
     runs-on: ubuntu-latest
