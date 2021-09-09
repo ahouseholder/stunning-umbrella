@@ -98,4 +98,4 @@ jobs:
       - name: delete my_branch
         run: |
           git push -d origin my_branch
-          git branch -d my_branch
+          git branch -D my_branch
