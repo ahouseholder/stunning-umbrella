@@ -80,13 +80,17 @@ jobs:
         run: |
           git checkout my_branch
           echo here1 
-          git pull --verbose
+          git pull --verbose --rebase
+          git branch
+          ls -l 
           echo here2
           git fetch --verbose --all
           echo here3
           git checkout main
+          git branch 
+          ls -l
           echo here4
-          git merge --verbose --squash my_branch
+          git merge --verbose --stat --squash my_branch
           echo here5
           git commit -m "merge squashed my_branch"
           echo here6
