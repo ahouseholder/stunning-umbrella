@@ -81,7 +81,10 @@ jobs:
           git branch
           git fetch --all
           git checkout main
-          git branch
+          git pull
+          echo "==="
+          git branch 
+          echo "==="
           git merge --squash my_branch
           echo here1
           git commit -m "merge squashed my_branch"
