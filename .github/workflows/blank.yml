@@ -39,7 +39,7 @@ jobs:
           ref: my_branch
       
       - run: |
-          echo ${{ matrix.pfx }} > ${{ matrix.pfx }}_.txt
+          echo $RANDOM > ${{ matrix.pfx }}_.txt
         
       - run: |
           git config --global user.email "you@example.com"
@@ -75,18 +75,16 @@ jobs:
           git status
           git add .
           git commit -m "replace individual files"
+          git pull --verbose --rebase
+          git pull --verbose --rebase origin main
+          git branch
+          ls -l
       
       - name: squash merge 
         run: |
-          git checkout my_branch
-          echo here1 
-          git pull --verbose --rebase
-          git branch
-          ls -l 
-          echo here2
           git fetch --verbose --all
-          echo here3
           git checkout main
+          git pull --verbose --rebase origin main
           git branch 
           ls -l
           echo here4
