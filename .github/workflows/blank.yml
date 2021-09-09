@@ -22,10 +22,9 @@ jobs:
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: |
-          git branch my_branch
-          git checkout my_branch
-          git push --set-upstream origin my_branch
-      
+          git checkout -b my_branch --track origin/my_branch
+          git push
+
   add_files:
     runs-on: ubuntu-latest
     needs: create_branch
@@ -53,6 +52,7 @@ jobs:
              git push && break
              sleep $[ ( $RANDOM % 10 ) + 1]
           done
+          
   concat_files:
     runs-on: ubuntu-latest
     needs: add_files
@@ -71,26 +71,27 @@ jobs:
         run: |
           git branch
           cat *_.txt > out.txt
-          rm *_.txt
+          rm -v *_.txt
           git status
           git add .
           git commit -m "replace individual files"
       
       - name: squash merge 
         run: |
-          git branch
-          git fetch --all
-          git checkout main
-          git pull
-          echo "==="
-          git branch 
-          echo "==="
-          git merge --squash my_branch
-          echo here1
-          git commit -m "merge squashed my_branch"
+          git checkout my_branch
+          echo here1 
+          git pull --verbose
           echo here2
-          git push origin main
+          git fetch --verbose --all
           echo here3
+          git checkout main
+          echo here4
+          git merge --verbose --squash my_branch
+          echo here5
+          git commit -m "merge squashed my_branch"
+          echo here6
+          git push --verbose origin main
+          echo here7
           
       - name: delete my_branch
         run: |
