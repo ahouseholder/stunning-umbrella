@@ -69,18 +69,25 @@ jobs:
           
       - name: cat files
         run: |
-          cat *.txt > out.txt
+          git branch
+          cat *_.txt > out.txt
           rm *_.txt
+          git status
           git add .
           git commit -m "replace individual files"
       
       - name: squash merge 
         run: |
+          git branch
           git fetch --all
           git checkout main
+          git branch
           git merge --squash my_branch
+          echo here1
           git commit -m "merge squashed my_branch"
+          echo here2
           git push origin main
+          echo here3
           
       - name: delete my_branch
         run: |
