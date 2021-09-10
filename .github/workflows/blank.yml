@@ -2,30 +2,30 @@
 
 name: Test
 
-# Controls when the workflow will run
 on:
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   create_branch:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    outputs:
+      branch_name: ${{ steps.branch_name.outputs.bname }}
+      
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
+      - name: generate branch name
+        id: branch_name
+        run: echo "::set-output name=bname::$(uuidgen)"
+        
       # Runs a single command using the runners shell
-      - name: Run a one-line script
+      - name: create temp branch
         run: |
-          git checkout -b my_branch
-          git push --set-upstream origin my_branch
+          git checkout -b ${{ steps.branch_name.outputs.bname }}
+          git push --set-upstream origin ${{ steps.branch_name.outputs.bname }}
 
-  add_files:
+  map_thing:
     runs-on: ubuntu-latest
     needs: create_branch
     
@@ -36,7 +36,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: my_branch
+          ref: ${{ needs.create_branch.outputs.branch_name }}
       
       - run: |
           echo $RANDOM > ${{ matrix.pfx }}_.txt
@@ -53,49 +53,48 @@ jobs:
              sleep $[ ( $RANDOM % 10 ) + 1]
           done
           
-  concat_files:
+  reduce_thing:
     runs-on: ubuntu-latest
-    needs: add_files
+    needs: map_thing, create_branch
     
-    steps:
+    steps:  
+  
       - uses: actions/checkout@v2
         with:
-          ref: my_branch
+          ref: ${{ needs.create_branch.outputs.branch_name }}
       
       - name: git config
         run: |
           git config --global user.email "you@example.com"
           git config --global user.name "Your Name"
           
-      - name: cat files
+      - name: do the work
         run: |
-          git branch
-          cat *_.txt > out.txt
+          cat *_.txt | sort -n > out.txt
           rm -v *_.txt
-          git status
+
+      - name: commit the work
+        run: |
           git add .
           git commit -m "replace individual files"
+
+      - name: catch up with everything else
+        run: |
           git pull --verbose --rebase
           git pull --verbose --rebase origin main
-          git branch
-          ls -l
       
       - name: squash merge 
         run: |
           git fetch --verbose --all
           git checkout main
           git pull --verbose --rebase origin main
-          git branch 
-          ls -l
-          echo here4
-          git merge --verbose --stat --squash my_branch
-          echo here5
-          git commit -m "merge squashed my_branch"
-          echo here6
-          git push --verbose origin main
-          echo here7
+          git merge --verbose --stat --squash ${{ needs.create_branch.outputs.branch_name }}
+          git commit -m "merge squashed ${{ needs.create_branch.outputs.branch_name }}"
           
-      - name: delete my_branch
+      - name: push main
+        run: git push --verbose origin main
+          
+      - name: delete temp branch
         run: |
-          git push -d origin my_branch
-          git branch -D my_branch
+          git push -d origin ${{ needs.create_branch.outputs.branch_name }}
+          git branch -D ${{ needs.create_branch.outputs.branch_name }}
