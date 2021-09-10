@@ -55,7 +55,7 @@ jobs:
           
   reduce_thing:
     runs-on: ubuntu-latest
-    needs: map_thing, create_branch
+    needs: [ map_thing, create_branch ]
     
     steps:  
   
